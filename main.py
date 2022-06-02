@@ -4,16 +4,30 @@ import sys
 from random import randint
 import random
 
-import utils
 import maps
 
 
-pygame.init()
-pacman_map = maps.map3
-width, height = utils.get_map_size(pacman_map)
-screen = pygame.display.set_mode((width, height))
-clock = pygame.time.Clock()
-img_size = 50
+def get_map_size(map):
+    columns_count = len(map[0])
+    for line in map:
+        if len(line) != columns_count:
+            return None
+    # TODO check if has't free space
+    return columns_count * 50, len(map) * 50
+
+
+def draw_map(screen, map):
+    y = 0
+    for row in map:
+        x = 0
+        for col in row:
+            if col == 0:
+                img = pygame.image.load('./media/floor.png')
+            elif col == 1:
+                img = pygame.image.load('./media/border.png')
+            screen.blit(img, (x, y))
+            x += 50
+        y += 50
 
 
 def init_enemies():
@@ -50,7 +64,6 @@ class Pacman:
         else:
             pacman_img = pygame.image.load('./media/pacman.png')
         screen.blit(pacman_img, (self.x, self.y))
-        # pygame.display.update()
 
 
     def update(self):
@@ -65,7 +78,6 @@ class Pacman:
             self.x += img_size
         else:
             self.is_moving = 0
-        # self.draw()
 
 
 class Enemy:
@@ -80,7 +92,6 @@ class Enemy:
     def draw(self):
         enemy_img = pygame.image.load('./media/enemy.png')
         screen.blit(enemy_img, (self.x, self.y))
-        # pygame.display.update()
 
 
     def is_allow_move(self, x, y):
@@ -103,7 +114,6 @@ class Enemy:
             self.change_direction = 0
             self.direction = random.choice(['left', 'right', 'up', 'down'])
         i += 1
-        # self.draw()
 
 
     def generate_coord(self):
@@ -114,8 +124,15 @@ class Enemy:
                 return x * img_size, y * img_size
 
 
+pygame.init()
+pacman_map = maps.map_list
+width, height = get_map_size(pacman_map)
+screen = pygame.display.set_mode((width, height))
+clock = pygame.time.Clock()
+img_size = 50
 pacman = Pacman(int(len(pacman_map[0]) / 2) * img_size, int(len(pacman_map) / 2) * img_size)
 enemies = []
+
 
 while True:
     clock.tick(60)
@@ -128,15 +145,15 @@ while True:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
+            if event.key == pygame.K_UP:
                 pacman.direction = 'up'
-            elif event.key == pygame.K_d:
+            elif event.key == pygame.K_RIGHT:
                 pacman.direction = 'right'
-            elif event.key == pygame.K_s:
+            elif event.key == pygame.K_DOWN:
                 pacman.direction = 'down'
-            elif event.key == pygame.K_a:
+            elif event.key == pygame.K_LEFT:
                 pacman.direction = 'left'
-    utils.draw_map(screen, pacman_map)
+    draw_map(screen, pacman_map)
     for enemy in enemies:
         if pacman.x == enemy.x and pacman.y == enemy.y:
             enemies.remove(enemy)
