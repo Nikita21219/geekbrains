@@ -43,8 +43,8 @@ class Pacman:
         pacman_img = pygame.image.load('./media/pacman.png')
         screen.blit(pacman_img, (self.x, self.y))
         pygame.display.update()
-    
-    
+
+
     def update(self):
         if self.direction == 'up' and self.is_allow_move(self.x, self.y - img_size):
             self.y -= img_size
@@ -64,14 +64,14 @@ class Enemy:
         self.direction = random.choice(['left', 'right', 'up', 'down'])
 
 
-    def update(self):
-        pass
-
-
     def draw(self):
         enemy_img = pygame.image.load('./media/pacman.png')
         screen.blit(enemy_img, (self.x, self.y))
-        # pygame.display.update()
+
+
+    def update(self):
+        self.draw()
+        pygame.display.update()
 
 
 pacman = Pacman(int(len(pacman_map[0]) / 2) * img_size, int(len(pacman_map) / 2) * img_size)
@@ -96,8 +96,7 @@ while True:
             elif event.key == pygame.K_a:
                     pacman.direction = 'left'
     for enemy in enemies:
-        enemy.draw()
-    pygame.display.flip()
+        enemy.update()
     if pacman.move == pacman.moveDelay:
         pacman.move = 0
         utils.draw_map(screen, pacman_map)
