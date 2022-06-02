@@ -12,7 +12,6 @@ def get_map_size(map):
     for line in map:
         if len(line) != columns_count:
             return None
-    # TODO check if has't free space
     return columns_count * 50, len(map) * 50
 
 
