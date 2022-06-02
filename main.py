@@ -135,11 +135,6 @@ enemies = []
 
 
 while True:
-    clock.tick(60)
-    pacman.move += 1
-    pacman.mouth += 1
-    if len(enemies) == 0:
-        enemies = init_enemies()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -153,6 +148,11 @@ while True:
                 pacman.direction = 'down'
             elif event.key == pygame.K_LEFT:
                 pacman.direction = 'left'
+    clock.tick(60)
+    pacman.move += 1
+    pacman.mouth += 1
+    if len(enemies) == 0:
+        enemies = init_enemies()
     draw_map(screen, pacman_map)
     for enemy in enemies:
         if pacman.x == enemy.x and pacman.y == enemy.y:
