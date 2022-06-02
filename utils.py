@@ -3,6 +3,8 @@ import os
 import maps
 import sys
 
+
+
 def get_map_size(map):
     columns_count = len(map[0])
     for line in map:
@@ -25,4 +27,3 @@ def draw_map(screen, map):
             screen.blit(img, (x, y))
             x += 50
         y += 50
-
